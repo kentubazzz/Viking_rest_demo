@@ -7,14 +7,24 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 @Service
 public class VikingService {
     private final CopyOnWriteArrayList<Viking> vikings = new CopyOnWriteArrayList<>();
     private final VikingFactory vikingFactory;
+    private final List<Consumer<List<Viking>>> listeners = new CopyOnWriteArrayList<>();
 
     public VikingService(VikingFactory vikingFactory) {
         this.vikingFactory = vikingFactory;
+    }
+
+    public void addListener(Consumer<List<Viking>> listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyDataChanged() {
+        listeners.forEach(listener -> listener.accept(List.copyOf(vikings)));
     }
 
     public List<Viking> findAll() {
@@ -24,6 +34,7 @@ public class VikingService {
     public Viking createRandomViking() {
         Viking viking = vikingFactory.createRandomViking();
         vikings.add(viking);
+        notifyDataChanged();
         return viking;
     }
 
@@ -40,6 +51,7 @@ public class VikingService {
         )
                 : viking;
         vikings.add(storedViking);
+        notifyDataChanged();
         return storedViking;
     }
 
@@ -64,6 +76,7 @@ public class VikingService {
                         updatedViking.equipment()
                 );
                 vikings.set(i, replacement);
+                notifyDataChanged();
                 return replacement;
             }
         }
@@ -75,5 +88,6 @@ public class VikingService {
         if (!removed) {
             throw new NoSuchElementException("Viking with id " + id + " not found");
         }
+        notifyDataChanged();
     }
 }

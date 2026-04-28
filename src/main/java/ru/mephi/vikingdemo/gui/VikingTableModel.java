@@ -10,11 +10,16 @@ import java.util.stream.Collectors;
 
 public class VikingTableModel extends AbstractTableModel {
     private final String[] columns = {"Name", "Age", "Height (cm)", "Hair color", "Beard style", "Equipment"};
-    private final List<Viking> data = new ArrayList<>();
+    private List<Viking> data = new ArrayList<>();
+
+    public void setVikings(List<Viking> vikings) {
+        this.data = new ArrayList<>(vikings);
+        fireTableDataChanged();
+    }
 
     public void addViking(Viking viking) {
-        int row = data.size();
         data.add(viking);
+        int row = data.size() - 1;
         fireTableRowsInserted(row, row);
     }
 

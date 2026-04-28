@@ -10,9 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
 
 public class VikingDesktopFrame extends JFrame {
     private final VikingService vikingService;
@@ -20,6 +22,9 @@ public class VikingDesktopFrame extends JFrame {
 
     public VikingDesktopFrame(VikingService vikingService) {
         this.vikingService = vikingService;
+
+        // Подписываемся на изменения данных (добавление, удаление, обновление)
+        this.vikingService.addListener(this::refreshTable);
 
         setTitle("Viking Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,11 +49,11 @@ public class VikingDesktopFrame extends JFrame {
     }
 
     private void onCreateViking() {
-        Viking viking = vikingService.createRandomViking();
-        tableModel.addViking(viking);
+        vikingService.createRandomViking();
+        // Таблица обновится автоматически через слушателя
     }
 
-    public void addNewViking(Viking viking) {
-        tableModel.addViking(viking);
+    public void refreshTable(List<Viking> vikings) {
+        SwingUtilities.invokeLater(() -> tableModel.setVikings(vikings));
     }
 }

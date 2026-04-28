@@ -20,6 +20,6 @@ public class VikingListener {
     }
 
     void testAdd() {
-        gui.addNewViking(service.createRandomViking());
+        service.createRandomViking(); // Просто создаём викинга, GUI обновится через слушателя
     }
 }

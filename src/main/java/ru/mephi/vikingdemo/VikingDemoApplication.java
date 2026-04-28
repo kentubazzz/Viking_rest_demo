@@ -22,6 +22,11 @@ public class VikingDemoApplication {
         SwingUtilities.invokeLater(() -> {
             VikingDesktopFrame frame = new VikingDesktopFrame(vikingService);
             vikingListener.setGui(frame);
+
+            // Загружаем существующих викингов через слушателя
+            vikingService.addListener(vikings -> {});
+            frame.refreshTable(vikingService.findAll());
+
             frame.setVisible(true);
         });
     }
