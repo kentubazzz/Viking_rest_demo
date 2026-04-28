@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class VikingTableModel extends AbstractTableModel {
-
     private final String[] columns = {"Name", "Age", "Height (cm)", "Hair color", "Beard style", "Equipment"};
     private final List<Viking> data = new ArrayList<>();
 

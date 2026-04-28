@@ -14,9 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 
-
 public class VikingDesktopFrame extends JFrame {
-
     private final VikingService vikingService;
     private final VikingTableModel tableModel = new VikingTableModel();
 
@@ -49,8 +47,8 @@ public class VikingDesktopFrame extends JFrame {
         Viking viking = vikingService.createRandomViking();
         tableModel.addViking(viking);
     }
-    
-    public void addNewViking(Viking viking){
+
+    public void addNewViking(Viking viking) {
         tableModel.addViking(viking);
     }
 }

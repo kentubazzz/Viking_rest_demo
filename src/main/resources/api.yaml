@@ -1,0 +1,169 @@
+openapi: 3.0.3
+info:
+  title: Viking Demo API
+  version: 1.1.0
+  description: Демонстрационное REST API для CRUD-операций над созданными викингами
+servers:
+  - url: http://localhost:8081
+    description: Локальный сервер разработки
+paths:
+  /api/vikings:
+    get:
+      tags: [Vikings]
+      summary: Получить список всех созданных викингов
+      operationId: getAllVikings
+      responses:
+        '200':
+          description: Список викингов успешно получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Viking'
+    post:
+      tags: [Vikings]
+      summary: Добавить конкретного викинга
+      operationId: addViking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viking'
+      responses:
+        '201':
+          description: Викинг успешно добавлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viking'
+  /api/vikings/{id}:
+    get:
+      tags: [Vikings]
+      summary: Получить конкретного викинга по id
+      operationId: getVikingById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Викинг найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viking'
+        '404':
+          description: Викинг не найден
+    put:
+      tags: [Vikings]
+      summary: Перезаписать параметры конкретного викинга
+      operationId: updateViking
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viking'
+      responses:
+        '200':
+          description: Викинг успешно обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viking'
+        '404':
+          description: Викинг не найден
+    delete:
+      tags: [Vikings]
+      summary: Удалить конкретного викинга из таблицы
+      operationId: deleteViking
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Викинг успешно удалён
+        '404':
+          description: Викинг не найден
+  /api/vikings/test:
+    get:
+      tags: [Vikings]
+      summary: Получить список тестовых викингов
+      operationId: getTest
+      responses:
+        '200':
+          description: Список успешно получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+components:
+  schemas:
+    Viking:
+      type: object
+      required:
+        - id
+        - name
+        - age
+        - heightCm
+        - hairColor
+        - beardStyle
+        - equipment
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 550e8400-e29b-41d4-a716-446655440000
+        name:
+          type: string
+          example: Ragnar
+        age:
+          type: integer
+          format: int32
+          example: 34
+        heightCm:
+          type: integer
+          format: int32
+          example: 182
+        hairColor:
+          $ref: '#/components/schemas/HairColor'
+        beardStyle:
+          $ref: '#/components/schemas/BeardStyle'
+        equipment:
+          type: array
+          items:
+            $ref: '#/components/schemas/EquipmentItem'
+    EquipmentItem:
+      type: object
+      required: [name, quality]
+      properties:
+        name:
+          type: string
+          example: Axe
+        quality:
+          type: string
+          example: Rare
+    HairColor:
+      type: string
+      enum: [Blond, Red, Brown, Black, Gray]
+    BeardStyle:
+      type: string
+      enum: [SHORT, LONG, BRAIDED, FORKED, CLEAN_SHAVEN]
